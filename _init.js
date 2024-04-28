@@ -1,5 +1,8 @@
 var JRENDER = {};
+JLIB.extensions.JRENDER = JRENDER;
 
-var JRENDER_SRC = [];
+var JRENDER_SRC = [
+    {src: "canvas/createNewCanvas", requirements: [], enabled: () => true}
+];
 
-JLIB_LOADER.JLIB_SRC_LIST = JLIB_LOADER.JLIB_SRC_LIST.concat(JRENDER_SRC);
+JLIB_LOADER.LOAD_EXTENSION_SRC_LIST(JRENDER_SRC, "JRENDER");

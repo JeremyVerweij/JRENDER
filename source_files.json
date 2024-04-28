@@ -1,3 +1,4 @@
 [
-    "_init.js"
+    "_init.js",
+    "canvas/createNewCanvas.js"
 ]
