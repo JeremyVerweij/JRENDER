@@ -1,4 +1,9 @@
 [
     "_init.js",
-    "canvas/createNewCanvas.js"
+    "canvas/createNewCanvas.js",
+    "canvas/elements/line.js",
+    "canvas/elements/image.js",
+    "canvas/elements/rectangle.js",
+    "canvas/elements/text.js",
+    "rgba.js"
 ]
