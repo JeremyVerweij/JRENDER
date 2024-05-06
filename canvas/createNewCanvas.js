@@ -1,7 +1,7 @@
 JRENDER.canvas = {};
 
 JRENDER.canvas.canvas = class{
-    constructor(name = "", fullScreen = false, keepWidthAtHeight = true, pixelArt = true, scaleWithMouseWheel = false, minScale = 1, maxScale = 1, scaleSpeed = 0.008, canvas_width = 100, canvas_height = 100, background_color = "#000000", center = true, x_offset = 0, y_offset = 0, width = 0, height = 0){
+    constructor(name = "", fullScreen = false, canvasFullScreen = false, keepWidthAtHeight = true, pixelArt = true, scaleWithMouseWheel = false, minScale = 1, maxScale = 1, scaleSpeed = 0.008, canvas_width = 100, canvas_height = 100, background_color = "#000000", center = true, x_offset = 0, y_offset = 0, width = 0, height = 0){
         this.name = name;
         this.fullScreen = fullScreen;
         this.pixelArt = pixelArt;
@@ -12,8 +12,6 @@ JRENDER.canvas.canvas = class{
         this.width = (fullScreen ? JLIB.api.windowSize.width : width);
         this.height = (fullScreen ? JLIB.api.windowSize.height : height);
         this.keepWidthAtHeight = keepWidthAtHeight;
-        this.canvas_width = canvas_width;
-        this.canvas_height = canvas_height;
         this.scaleWithMouseWheel = scaleWithMouseWheel;
         this.minScale = minScale;
         this.maxScale = maxScale;
@@ -22,6 +20,12 @@ JRENDER.canvas.canvas = class{
         this.scale = 1;
         this.originx = 0;
         this.originy = 0;
+        this.canvasFullScreen = false;
+
+        if(this.fullScreen)this.canvasFullScreen = canvasFullScreen;
+
+        this.canvas_width = (this.canvasFullScreen ? JLIB.api.windowSize.width : canvas_width);
+        this.canvas_height = (this.canvasFullScreen ? JLIB.api.windowSize.height : canvas_height);
 
         if(this.keepWidthAtHeight){
             if(this.width > this.height) this.width = this.height;
@@ -40,8 +44,8 @@ JRENDER.canvas.canvas = class{
             this.html.style.left = (((JLIB.api.windowSize.width - this.width) / 2) + this.x_offset) + "px";
             this.html.style.top = (((JLIB.api.windowSize.height - this.height) / 2) + this.y_offset) + "px";
         }else{
-            this.html.style.left = this.x_offset;
-            this.html.style.top = this.y_offset;
+            this.html.style.left = this.x_offset + "px";
+            this.html.style.top = this.y_offset + "px";
         }
         this.html.style.backgroundColor = this.background_color;
 
@@ -52,6 +56,13 @@ JRENDER.canvas.canvas = class{
         if(this.fullScreen)JLIB.api.addResizeEvent(() => {
             this.width = JLIB.api.windowSize.width;
             this.height = JLIB.api.windowSize.height;
+
+            if(this.canvasFullScreen){
+                this.canvas_width = JLIB.api.windowSize.width;
+                this.canvas_height = JLIB.api.windowSize.height;
+                this.html.width = this.canvas_width;
+                this.html.height = this.canvas_height;
+            }
 
             if(this.keepWidthAtHeight){
                 if(this.width > this.height) this.width = this.height;
@@ -68,9 +79,15 @@ JRENDER.canvas.canvas = class{
         });
 
         if(this.scaleWithMouseWheel) JLIB.api.addWheelEvent((e) => this.scaleFunc(e));
+        this.scaleEnable = () => true;
+    }
+
+    setScaleCancelor(_callback){
+        this.scaleEnable = _callback;
     }
 
     scaleFunc(e){
+        if(!this.scaleEnable()) return;
         var mousex = 0, mousey = 0;
         var wheel = e/this.scaleSpeed;
         
@@ -104,8 +121,11 @@ JRENDER.canvas.canvas = class{
         this.originy = ( mousey / this.scale + this.originy - mousey / ( this.scale * zoom ) );
         this.scale *= zoom;
         
-        this.clear = this.clearCanvasFast;
         this.render(); 
+    }
+
+    clear(){
+        this.clearCanvasFast();
     }
 
     drawIMGsimple(htmlElement, x, y, w, h) {
@@ -154,6 +174,10 @@ JRENDER.canvas.canvas = class{
 
         this.ctx.strokeStyle = outline_color;
         this.ctx.strokeText(text, x, y);
+    }
+
+    getBox(){
+        return JLIB.common.convertToBox({x: this.x_offset, y: this.y_offset, width: this.width, height: this.height});
     }
 
     render(){

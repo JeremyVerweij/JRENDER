@@ -1,21 +1,17 @@
-JRENDER.canvas.image = class{
-    constructor(canvas, imageSrc, drawX, drawY, drawWidth, drawHeight, sourceX, sourceY, sourceWidth, sourceHeight){
-        this.canvas = canvas;
+JRENDER.canvas.image = class extends JRENDER.canvas.renderObject{
+    constructor(canvas, imageSrc, drawX, drawY, alignH, alignV, drawWidth, drawHeight, sourceX, sourceY, sourceWidth, sourceHeight){
+        super(canvas, drawX, drawY, drawWidth, drawHeight, alignH, alignV);
         this.imageSrc = imageSrc;
-        this.drawX = drawX;
-        this.drawY = drawY;
-        this.drawWidth = drawWidth;
-        this.drawHeight = drawHeight;
         this.sourceX = sourceX;
         this.sourceY = sourceY;
         this.sourceWidth = sourceWidth;
         this.sourceHeight = sourceHeight;
-
-        canvas.elements.push(this.imageSrc, this.drawX, this.drawY, this.drawWidth, this.drawHeight, this.sourceX, this.sourceY, this.sourceWidth, this.sourceHeight);
+        
+        canvas.elements.push(this);
     }
 
     render(){
-        this.canvas.drawIMGcomplex();
+        this.canvas.drawIMGcomplex(this.imageSrc, this.calcActualX(), this.calcActualY(), this.width, this.height, this.sourceX, this.sourceY, this.sourceWidth, this.sourceHeight);
     }
 }
 
