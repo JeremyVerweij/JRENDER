@@ -1,0 +1,8 @@
+{
+    "description": [
+        "Render libary extension for JLIB.",
+        "This module has all the bases for canvas rendering.",
+        "In the future we will also support webgl, but this is not possible right now."
+    ],
+    "requirements": []
+}
