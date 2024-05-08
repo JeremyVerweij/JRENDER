@@ -1,5 +1,5 @@
 [
-    "_init.js",
+    "init.js",
     "canvas/createNewCanvas.js",
     "canvas/elements/renderObject.js",
     "canvas/elements/line.js",
